@@ -44,7 +44,10 @@ function NewReport() {
             value={newVlaue.data ? newVlaue.data.location : ""}
           />
           <br />
-          <Image src={newVlaue.data ? newVlaue.data.image : ""} fluid />
+          <video>
+            <source src={newVlaue.data ? newVlaue.data.file : ""}></source>
+          </video>
+          {/* <Image src={newVlaue.data ? newVlaue.data.image : ""} fluid /> */}
         </FormGroup>
 
         <FormGroup>

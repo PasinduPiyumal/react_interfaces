@@ -17,6 +17,8 @@ function Select() {
     car_vs_pedestrian: "",
     car_vs_tree: "",
     human_gatherings: "",
+    drown_in_water: "",
+    vehicle_fire: "",
   });
   const [isActive, setisActive] = useState({
     car_vs_car: false,
@@ -24,6 +26,8 @@ function Select() {
     car_vs_pedestrian: false,
     car_vs_tree: false,
     human_gatherings: false,
+    drown_in_water: false,
+    vehicle_fire: false,
   });
 
   useEffect(async () => {
@@ -45,6 +49,8 @@ function Select() {
           car_vs_pedestrian: res.data.accuracy.car_vs_pedestrian,
           car_vs_tree: res.data.accuracy.car_vs_tree,
           human_gatherings: res.data.accuracy.human_count_avg,
+          drown_in_water: res.data.accuracy.drown_in_water,
+          vehicle_fire: res.data.accuracy.vehicle_fire,
         });
       })
       .catch((err) => {
@@ -60,36 +66,17 @@ function Select() {
       car_vs_pedestrian: false,
       car_vs_tree: false,
       human_gatherings: false,
+      drown_in_water: false,
+      vehicle_fire: false,
     });
-    if (acValues.car_vs_car) {
-      if (parseFloat(acValues.car_vs_car) > parseFloat(acValues.car_vs_bike)) {
-        setisActive({ ...isActive, car_vs_car: true });
-      } else {
-        if (
-          parseFloat(acValues.car_vs_bike) >
-          parseFloat(acValues.car_vs_pedestrian)
-        ) {
-          setisActive({ ...isActive, car_vs_bike: true });
-        } else {
-          if (
-            parseFloat(acValues.car_vs_pedestrian) >
-            parseFloat(acValues.car_vs_tree)
-          ) {
-            setisActive({ ...isActive, car_vs_pedestrian: true });
-          } else {
-            if (
-              parseFloat(acValues.car_vs_tree) >
-              parseFloat(acValues.human_gatherings)
-            ) {
-              setisActive({ ...isActive, car_vs_tree: true });
-            } else {
-              console.log(acValues.human_gatherings);
-              setisActive({ ...isActive, human_gatherings: true });
-            }
-          }
-        }
+    let max = "";
+    for (let i = 0; i < Object.keys(isActive).length; i++) {
+      if (max < Object.values(acValues)[i]) {
+        max = Object.values(acValues)[i];
+        setisActive({ ...isActive, [Object.keys(acValues)[i]]: true });
       }
     }
+    console.log(max);
   }
 
   return (
@@ -131,6 +118,20 @@ function Select() {
             type="checkbox"
             label="Human Gatherings"
             checked={isActive.human_gatherings ? "checked" : ""}
+          />
+        </FormGroup>
+        <FormGroup controlId="formBasicCheckbox">
+          <FormCheck
+            type="checkbox"
+            label="Drown In Water"
+            checked={isActive.drown_in_water ? "checked" : ""}
+          />
+        </FormGroup>
+        <FormGroup controlId="formBasicCheckbox">
+          <FormCheck
+            type="checkbox"
+            label="Vehicle Fire"
+            checked={isActive.vehicle_fire ? "checked" : ""}
           />
         </FormGroup>
       </Form>
