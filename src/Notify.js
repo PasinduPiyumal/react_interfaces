@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 
 function Notify() {
+  const [rede, setrede] = useState(false);
   const [acValues, setacValues] = useState({
     car_vs_car: "",
     car_vs_bike: "",
@@ -50,21 +51,25 @@ function Notify() {
   }
   function acType() {
     let arr = [];
-    let result = {};
     for (let i = 0; i < Object.keys(acValues).length; i++) {
-      if (parseFloat(Object.values(acValues)[i]) > 10) {
+      if (parseFloat(Object.values(acValues)[i]) > 30) {
         arr.push({ [Object.keys(acValues)[i]]: true });
       } else {
         arr.push({ [Object.keys(acValues)[i]]: false });
       }
     }
     setisActive(...[arr]);
+    setrede(!rede);
+  }
 
+  useEffect(() => {
+    let result = {};
     for (let z = 0; z < isActive.length; z++) {
       result[Object.keys(isActive[z])] = Object.values(isActive[z])[0];
     }
     setvalues(...[result]);
-  }
+  }, [rede]);
+
   return (
     <div>
       <h1> Notify of Reports </h1>

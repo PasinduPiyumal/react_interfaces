@@ -11,6 +11,8 @@ import {
 } from "react-bootstrap";
 
 function Select() {
+  const [rede, setrede] = useState(false);
+  const [isActiveSet, setisActiveSet] = useState([]);
   const [acValues, setacValues] = useState({
     car_vs_car: "",
     car_vs_bike: "",
@@ -19,6 +21,7 @@ function Select() {
     human_gatherings: "",
     drown_in_water: "",
     vehicle_fire: "",
+    normal: "",
   });
   const [isActive, setisActive] = useState({
     car_vs_car: false,
@@ -28,6 +31,7 @@ function Select() {
     human_gatherings: false,
     drown_in_water: false,
     vehicle_fire: false,
+    normal: false,
   });
 
   useEffect(async () => {
@@ -51,6 +55,7 @@ function Select() {
           human_gatherings: res.data.accuracy.human_count_avg,
           drown_in_water: res.data.accuracy.drown_in_water,
           vehicle_fire: res.data.accuracy.vehicle_fire,
+          normal: "",
         });
       })
       .catch((err) => {
@@ -68,16 +73,37 @@ function Select() {
       human_gatherings: false,
       drown_in_water: false,
       vehicle_fire: false,
+      normal: false,
     });
-    let max = "";
+    let max = [];
     for (let i = 0; i < Object.keys(isActive).length; i++) {
-      if (max < Object.values(acValues)[i]) {
-        max = Object.values(acValues)[i];
-        setisActive({ ...isActive, [Object.keys(acValues)[i]]: true });
+      if (50 < parseFloat(Object.values(acValues)[i])) {
+        max.push({ [Object.keys(acValues)[i]]: true });
+      } else {
+        max.push({ [Object.keys(acValues)[i]]: false });
       }
     }
-    console.log(max);
+    setisActiveSet(...[max]);
+    setrede(!rede);
   }
+
+  useEffect(() => {
+    let result = {};
+    for (let z = 0; z < isActiveSet.length; z++) {
+      result[Object.keys(isActiveSet[z])] = Object.values(isActiveSet[z])[0];
+    }
+
+    setisActive(result);
+  }, [rede]);
+
+  useEffect(() => {
+    let arr = Object.values(isActive);
+    const allEqual = (arr) => arr.every((val) => val === arr[0]);
+
+    if (!allEqual) {
+      setisActive({ ...isActive, normal: true });
+    }
+  }, [isActive]);
 
   return (
     <div>
@@ -132,6 +158,13 @@ function Select() {
             type="checkbox"
             label="Vehicle Fire"
             checked={isActive.vehicle_fire ? "checked" : ""}
+          />
+        </FormGroup>
+        <FormGroup controlId="formBasicCheckbox">
+          <FormCheck
+            type="checkbox"
+            label="Normal"
+            checked={isActive.normal ? "checked" : ""}
           />
         </FormGroup>
       </Form>

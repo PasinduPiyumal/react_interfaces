@@ -44,9 +44,11 @@ function NewReport() {
             value={newVlaue.data ? newVlaue.data.location : ""}
           />
           <br />
-          <video>
-            <source src={newVlaue.data ? newVlaue.data.file : ""}></source>
-          </video>
+          <img
+            style={{ width: "100%", height: "100%" }}
+            src={newVlaue.data ? newVlaue.data.file : ""}
+            alt="image"
+          />
           {/* <Image src={newVlaue.data ? newVlaue.data.image : ""} fluid /> */}
         </FormGroup>
 
